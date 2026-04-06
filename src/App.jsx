@@ -8,32 +8,35 @@ const BG     = "#F4F6FA";
 
 // ── TradeLink Logo ────────────────────────────────────────────
 function TradeLinkLogo({ size = "md" }) {
-  const iconH  = size === "sm" ? 28 : size === "lg" ? 56 : 40;
+  const iconH  = size === "sm" ? 32 : size === "lg" ? 60 : 46;
   const textSz = size === "sm" ? 17 : size === "lg" ? 34 : 24;
-  const gap    = size === "sm" ? 7  : size === "lg" ? 14 : 10;
+  const gap    = size === "sm" ? 8  : size === "lg" ? 14 : 10;
+  const iconW  = iconH * 0.86;
 
   return (
     <div style={{ display:"flex", alignItems:"center", gap }}>
-      {/* ── Robotic arm icon ── */}
-      <svg width={iconH * 0.9} height={iconH} viewBox="0 0 90 110" fill="none">
-        {/* Top ball joint */}
-        <circle cx="65" cy="12" r="11" fill={BLUE}/>
-        {/* Upper arm — top-right → middle-left */}
-        <rect x="12" y="5" width="62" height="18" rx="9"
-          transform="rotate(42 12 5)" fill={BLUE}/>
-        {/* Middle ball joint */}
-        <circle cx="27" cy="50" r="10" fill={BLUE}/>
-        {/* Lower arm — middle-left → lower-right */}
-        <rect x="23" y="43" width="58" height="18" rx="9"
-          transform="rotate(-38 23 43)" fill={BLUE}/>
-        {/* Lower-right ball joint */}
-        <circle cx="64" cy="76" r="9" fill={BLUE}/>
-        {/* Chain link base — horizontal bar */}
-        <rect x="12" y="82" width="52" height="16" rx="8" fill={BLUE}/>
-        {/* Left drive knob */}
-        <circle cx="12" cy="90" r="9" fill={BLUE}/>
-        {/* Right drive knob (orange accent) */}
-        <circle cx="64" cy="90" r="9" fill={ORANGE}/>
+      {/* ── Robotic arm / crane icon ── */}
+      <svg width={iconW} height={iconH} viewBox="0 0 86 100" fill="none">
+        {/* Short stub right from top ball */}
+        <line x1="54" y1="10" x2="76" y2="10"
+          stroke={BLUE} strokeWidth="12" strokeLinecap="round"/>
+        {/* Upper arm: top-ball → mid-joint */}
+        <line x1="54" y1="10" x2="22" y2="46"
+          stroke={BLUE} strokeWidth="14" strokeLinecap="round"/>
+        {/* Lower arm: mid-joint → lower-joint */}
+        <line x1="22" y1="46" x2="62" y2="68"
+          stroke={BLUE} strokeWidth="14" strokeLinecap="round"/>
+        {/* Short drop from lower-joint to base bar */}
+        <line x1="62" y1="68" x2="62" y2="78"
+          stroke={BLUE} strokeWidth="12" strokeLinecap="round"/>
+        {/* Bottom horizontal bar */}
+        <line x1="14" y1="78" x2="62" y2="78"
+          stroke={BLUE} strokeWidth="12" strokeLinecap="round"/>
+        {/* Chain link oval — the "link" in TradeLink */}
+        <ellipse cx="52" cy="91" rx="20" ry="10"
+          fill="none" stroke={BLUE} strokeWidth="9"/>
+        {/* Orange accent — right knob of chain link */}
+        <circle cx="72" cy="91" r="8" fill={ORANGE}/>
       </svg>
 
       {/* ── Wordmark ── */}
@@ -80,24 +83,24 @@ const TRADES = {
 // ── Translations ──────────────────────────────────────────────
 const T = {
   en: {
-    ticker: "⚡ NOW LAUNCHING IN FRESNO \u00a0·\u00a0 FIND TRADES IN HOURS, NOT DAYS \u00a0·\u00a0 FREE TO JOIN DURING BETA \u00a0·\u00a0 CONTRACTORS + TRADES WANTED \u00a0·\u00a0",
+    ticker: "⚡ NOW LAUNCHING IN THE CENTRAL VALLEY \u00a0·\u00a0 FIND TRADES IN HOURS, NOT DAYS \u00a0·\u00a0 FREE TO JOIN DURING BETA \u00a0·\u00a0 CONTRACTORS + TRADES WANTED \u00a0·\u00a0",
     navStatus: "Beta Signups Open",
     navCta: "Join Waitlist",
-    heroBadge: "🔨 Fresno's Construction Labor Marketplace",
+    heroBadge: "🔨 Central Valley's Construction Labor Marketplace",
     heroH1Line1: "Find the",
     heroH1Accent: "Right Trade",
     heroH1Line3: "In Hours.",
-    heroPara: "TradeLink connects Fresno general contractors with licensed, insured subcontractors — fast. No more calling around for days.",
+    heroPara: "TradeLink connects Central Valley general contractors with licensed, insured subcontractors — fast. No more calling around for days.",
     statContractors: "Contractors signed up",
     statTrades: "Trades on waitlist",
-    statCity: "City at launch",
+    statCity: "Region at launch",
     heroCta: "Join the Waitlist →",
     heroSub: "Free during beta · No credit card",
     howLabel: "How It Works",
     howH2: "Simple as 1-2-3",
     steps: [
       { n:"01", title:"Post Your Job",  desc:"GC fills in trade needed, location, dates, and budget. Takes 2 minutes from your phone.", icon:"📋", color: BLUE },
-      { n:"02", title:"Get Matched",    desc:"TradeLink surfaces verified, insured trades in Fresno who are available and reviewed.",    icon:"🔍", color: ORANGE },
+      { n:"02", title:"Get Matched",    desc:"TradeLink surfaces verified, insured trades across the Central Valley who are available and reviewed.",    icon:"🔍", color: ORANGE },
       { n:"03", title:"Hire & Go",      desc:"Compare bids, pick your trade, confirm the job. Everything tracked in one place.",         icon:"✅", color: DARK },
     ],
     sides: [
@@ -105,7 +108,7 @@ const T = {
         key:"gc", color: BLUE, radius:"6px 0 0 6px",
         eyebrow:"For General Contractors",
         headline:"Stop Burning Days Finding Trades",
-        items:["Browse verified, insured trades in Fresno","Compare bids and reviews in one place","Post a job in under 2 minutes","Built for the jobsite — mobile first","Free to use during beta"],
+        items:["Browse verified, insured trades across the Central Valley","Compare bids and reviews in one place","Post a job in under 2 minutes","Built for the jobsite — mobile first","Free to use during beta"],
         cta:"Sign Up as a Contractor",
       },
       {
@@ -118,15 +121,15 @@ const T = {
     ],
     urgencyLabel: "Limited Beta Spots",
     urgencyH2Line1: "Be First in",
-    urgencyH2Line2: "Fresno",
-    urgencyPara: "We're onboarding a small group of contractors and trades in Fresno before public launch. Early members get free access, priority matching, and a founding member badge on their profile.",
+    urgencyH2Line2: "the Valley",
+    urgencyPara: "We're onboarding a small group of contractors and trades across the Central Valley before public launch. Early members get free access, priority matching, and a founding member badge on their profile.",
     urgencyCta: "Reserve Your Spot →",
     urgencySub: "🔒 No spam. No credit card. We'll reach out personally.",
-    urgencyTags: ["✓ Free during beta","✓ Fresno-only launch","✓ Verified trades only"],
-    footerMeta: "Launching in Fresno, CA · Beta 2025 · hello@tradelink.com",
+    urgencyTags: ["✓ Free during beta","✓ Central Valley launch","✓ Verified trades only"],
+    footerMeta: "Launching in the Central Valley, CA · Beta 2025 · hello@tradelink.com",
     footerCta: "Join Waitlist",
     modalTitle: "Join TradeLink Beta",
-    modalSub: "Free access · Fresno launch · Limited spots",
+    modalSub: "Free access · Central Valley launch · Limited spots",
     formRoleLabel: "I am a *",
     formRoles: [{ value:"contractor", label:"General Contractor" },{ value:"trade", label:"Trade / Sub" }],
     formTradeLabel: "Trade Type *",
@@ -145,27 +148,27 @@ const T = {
     formError: "Something went wrong. Make sure the local server is running (npm run server).",
     formFooter: "🔒 No spam. No credit card. We'll reach out personally.",
     successTitle: "You're on the list!",
-    successBody: "We'll reach out personally when TradeLink launches in Fresno. Talk soon.",
+    successBody: "We'll reach out personally when TradeLink launches in the Central Valley. Talk soon.",
   },
   es: {
-    ticker: "⚡ AHORA LANZANDO EN FRESNO \u00a0·\u00a0 ENCUENTRA OFICIOS EN HORAS, NO DÍAS \u00a0·\u00a0 GRATIS DURANTE LA BETA \u00a0·\u00a0 SE BUSCAN CONTRATISTAS + OFICIOS \u00a0·\u00a0",
+    ticker: "⚡ AHORA LANZANDO EN EL VALLE CENTRAL \u00a0·\u00a0 ENCUENTRA OFICIOS EN HORAS, NO DÍAS \u00a0·\u00a0 GRATIS DURANTE LA BETA \u00a0·\u00a0 SE BUSCAN CONTRATISTAS + OFICIOS \u00a0·\u00a0",
     navStatus: "Inscripciones Beta Abiertas",
     navCta: "Únete a la Lista",
-    heroBadge: "🔨 El Mercado Laboral de Construcción de Fresno",
+    heroBadge: "🔨 El Mercado Laboral de Construcción del Valle Central",
     heroH1Line1: "Encuentra el",
     heroH1Accent: "Oficio Correcto",
     heroH1Line3: "En Horas.",
-    heroPara: "TradeLink conecta a los contratistas generales de Fresno con subcontratistas licenciados y asegurados — rápido. Sin más llamadas por días.",
+    heroPara: "TradeLink conecta a los contratistas generales del Valle Central con subcontratistas licenciados y asegurados — rápido. Sin más llamadas por días.",
     statContractors: "Contratistas registrados",
     statTrades: "Oficios en lista de espera",
-    statCity: "Ciudad al lanzamiento",
+    statCity: "Región al lanzamiento",
     heroCta: "Únete a la Lista de Espera →",
     heroSub: "Gratis durante la beta · Sin tarjeta de crédito",
     howLabel: "Cómo Funciona",
     howH2: "Simple como 1-2-3",
     steps: [
       { n:"01", title:"Publica tu Trabajo",      desc:"El GC ingresa el oficio, ubicación, fechas y presupuesto. Toma 2 minutos desde tu teléfono.",  icon:"📋", color: BLUE },
-      { n:"02", title:"Encuentra Coincidencias", desc:"TradeLink muestra oficios verificados y asegurados en Fresno disponibles y con reseñas.",        icon:"🔍", color: ORANGE },
+      { n:"02", title:"Encuentra Coincidencias", desc:"TradeLink muestra oficios verificados y asegurados en el Valle Central disponibles y con reseñas.", icon:"🔍", color: ORANGE },
       { n:"03", title:"Contrata y Avanza",        desc:"Compara ofertas, elige tu oficio, confirma el trabajo. Todo rastreado en un solo lugar.",        icon:"✅", color: DARK },
     ],
     sides: [
@@ -173,7 +176,7 @@ const T = {
         key:"gc", color: BLUE, radius:"6px 0 0 6px",
         eyebrow:"Para Contratistas Generales",
         headline:"Deja de Perder Días Buscando Oficios",
-        items:["Explora oficios verificados y asegurados en Fresno","Compara ofertas y reseñas en un solo lugar","Publica un trabajo en menos de 2 minutos","Diseñado para la obra — primero móvil","Gratis durante la beta"],
+        items:["Explora oficios verificados y asegurados en el Valle Central","Compara ofertas y reseñas en un solo lugar","Publica un trabajo en menos de 2 minutos","Diseñado para la obra — primero móvil","Gratis durante la beta"],
         cta:"Regístrate como Contratista",
       },
       {
@@ -186,15 +189,15 @@ const T = {
     ],
     urgencyLabel: "Plazas Beta Limitadas",
     urgencyH2Line1: "Sé el Primero",
-    urgencyH2Line2: "en Fresno",
-    urgencyPara: "Estamos incorporando a un pequeño grupo de contratistas y oficios en Fresno antes del lanzamiento público. Los miembros iniciales obtienen acceso gratuito, emparejamiento prioritario y una insignia de miembro fundador en su perfil.",
+    urgencyH2Line2: "el Valle",
+    urgencyPara: "Estamos incorporando a un pequeño grupo de contratistas y oficios en el Valle Central antes del lanzamiento público. Los miembros iniciales obtienen acceso gratuito, emparejamiento prioritario y una insignia de miembro fundador en su perfil.",
     urgencyCta: "Reserva Tu Lugar →",
     urgencySub: "🔒 Sin spam. Sin tarjeta de crédito. Nos comunicaremos personalmente.",
-    urgencyTags: ["✓ Gratis durante la beta","✓ Lanzamiento solo en Fresno","✓ Solo oficios verificados"],
-    footerMeta: "Lanzando en Fresno, CA · Beta 2025 · hello@tradelink.com",
+    urgencyTags: ["✓ Gratis durante la beta","✓ Lanzamiento en el Valle Central","✓ Solo oficios verificados"],
+    footerMeta: "Lanzando en el Valle Central, CA · Beta 2025 · hello@tradelink.com",
     footerCta: "Únete a la Lista",
     modalTitle: "Únete a la Beta de TradeLink",
-    modalSub: "Acceso gratuito · Lanzamiento en Fresno · Plazas limitadas",
+    modalSub: "Acceso gratuito · Lanzamiento en el Valle Central · Plazas limitadas",
     formRoleLabel: "Soy un/a *",
     formRoles: [{ value:"contractor", label:"Contratista General" },{ value:"trade", label:"Oficio / Sub" }],
     formTradeLabel: "Tipo de Oficio *",
@@ -213,7 +216,7 @@ const T = {
     formError: "Algo salió mal. Asegúrate de que el servidor local esté funcionando (npm run server).",
     formFooter: "🔒 Sin spam. Sin tarjeta de crédito. Nos comunicaremos personalmente.",
     successTitle: "¡Estás en la lista!",
-    successBody: "Te contactaremos personalmente cuando TradeLink lance en Fresno. Hasta pronto.",
+    successBody: "Te contactaremos personalmente cuando TradeLink lance en el Valle Central. Hasta pronto.",
   },
 };
 

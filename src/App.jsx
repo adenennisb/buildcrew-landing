@@ -76,9 +76,50 @@ function TradeLinkLogo({ size = "md" }) {
 
 // ── Trades list ───────────────────────────────────────────────
 const TRADES = {
-  en: ["Electrician","Plumber","Framer","Roofer","Drywall","Concrete","Painter","HVAC"],
-  es: ["Electricista","Plomero","Encofrador","Techador","Drywall","Concreto","Pintor","HVAC"],
+  en: [
+    // Mechanical / Electrical / Plumbing
+    "Electrician", "Plumber", "HVAC", "Fire Sprinkler", "Low Voltage", "Solar",
+    // Structure & Shell
+    "Framer", "Concrete", "Masonry", "Ironworker", "Welder", "Foundation",
+    // Exterior
+    "Roofer", "Waterproofing", "Stucco", "Siding", "Windows & Glazing", "Insulation",
+    // Interior Finishes
+    "Drywall", "Painter", "Flooring", "Tile", "Cabinets", "Countertops", "Acoustical Ceiling",
+    // Carpentry & Millwork
+    "Carpenter", "Millwork & Trim", "Door & Hardware",
+    // Site Work
+    "Excavation", "Grading", "Paving", "Demolition", "Fencing", "Landscaping",
+    // Specialty
+    "Crane Operator", "Elevator", "Security & Cameras", "Surveyor",
+  ],
+  es: [
+    // Mecánico / Eléctrico / Plomería
+    "Electricista", "Plomero", "HVAC", "Rociadores contra Incendios", "Voltaje Bajo", "Solar",
+    // Estructura
+    "Encofrador", "Concreto", "Albañilería", "Fierrero", "Soldador", "Cimentación",
+    // Exterior
+    "Techador", "Impermeabilización", "Estuco", "Revestimiento", "Ventanas y Vidriería", "Aislamiento",
+    // Acabados Interiores
+    "Drywall", "Pintor", "Pisos", "Azulejo", "Gabinetes", "Encimeras", "Techo Acústico",
+    // Carpintería
+    "Carpintero", "Molduras y Acabados", "Puertas y Herrajes",
+    // Obra Exterior
+    "Excavación", "Nivelación", "Pavimentación", "Demolición", "Cercas", "Jardinería",
+    // Especialidad
+    "Operador de Grúa", "Elevadores", "Seguridad y Cámaras", "Topógrafo",
+  ],
 };
+
+// Emoji per trade (matches index)
+const TRADE_EMOJIS = [
+  "⚡","🔧","❄️","🚿","📡","☀️",
+  "🪵","🏗","🧱","⚙️","🔩","🏚",
+  "🏠","💧","🏛","🏘","🪟","🧊",
+  "🧲","🎨","🪵","🟦","🪑","🔲","🔇",
+  "🪚","✂️","🚪",
+  "🚜","📐","🛣","💥","🚧","🌿",
+  "🏗","🛗","📷","📏",
+];
 
 // ── Translations ──────────────────────────────────────────────
 const T = {
@@ -418,10 +459,10 @@ export default function TradeLinkLanding() {
       {/* ── Trades Marquee ── */}
       <div style={{ background: DARK, padding:"16px 0", overflow:"hidden" }}>
         <div className="ticker-wrap">
-          <div className="ticker-inner" style={{ animationDuration:"20s" }}>
-            {[...trades,...trades,...trades,...trades].map((tr, i) => (
+          <div className="ticker-inner" style={{ animationDuration:"45s" }}>
+            {[...trades,...trades].map((tr, i) => (
               <span key={i} style={{ fontSize:15, fontWeight:700, letterSpacing:"0.1em", color:"#5A6480", textTransform:"uppercase", padding:"0 28px" }}>
-                {["⚡","🔧","🪵","🏠","🧱","🏗","🎨","❄️"][i%8]} {tr}
+                {TRADE_EMOJIS[i % TRADE_EMOJIS.length]} {tr}
               </span>
             ))}
           </div>

@@ -1,30 +1,64 @@
 import { useState, useEffect } from "react";
 
 const TRADES = ["Electrician","Plumber","Framer","Roofer","Drywall","Concrete","Painter","HVAC"];
-const TALLY_FORM_ID = "xXQ66J"; // ✅ Your live Tally form
 
 export default function BuildCrewLanding() {
   const [count] = useState({ contractors: 47, trades: 112 });
+  const [formOpen, setFormOpen] = useState(false);
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", role: "", trade_type: "", company: "" });
+  const [formState, setFormState] = useState("idle"); // idle | submitting | success | error
 
+  // Close modal on Escape
   useEffect(() => {
-    if (document.getElementById("tally-script")) return;
-    const script = document.createElement("script");
-    script.id = "tally-script";
-    script.src = "https://tally.so/widgets/embed.js";
-    script.onload = () => { if (window.Tally) window.Tally.loadEmbeds(); };
-    document.body.appendChild(script);
+    const onKey = (e) => { if (e.key === "Escape") closeForm(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const openTally = () => {
-    if (window.Tally) {
-      window.Tally.openPopup(TALLY_FORM_ID, {
-        width: 480,
-        overlay: true,
-        emoji: { text: "🏗", animation: "wave" },
+  const openForm = () => {
+    setFormData({ name: "", email: "", phone: "", role: "", trade_type: "", company: "" });
+    setFormState("idle");
+    setFormOpen(true);
+  };
+
+  const closeForm = () => {
+    setFormOpen(false);
+    setFormState("idle");
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFormState("submitting");
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
-    } else {
-      window.open(`https://tally.so/r/${TALLY_FORM_ID}`, "_blank");
+      if (!res.ok) throw new Error("Server error");
+      setFormState("success");
+      setTimeout(() => closeForm(), 3000);
+    } catch {
+      setFormState("error");
     }
+  };
+
+  const inputStyle = {
+    width: "100%", padding: "12px 14px", fontSize: 15,
+    border: "2px solid #D4C9B8", borderRadius: 4,
+    fontFamily: "'Barlow', sans-serif", background: "#FDFAF7",
+    color: "#1A1208", outline: "none",
+  };
+
+  const labelStyle = {
+    display: "block", fontSize: 12, fontWeight: 700,
+    letterSpacing: "0.08em", textTransform: "uppercase",
+    color: "#6B5E50", marginBottom: 6,
   };
 
   return (
@@ -38,6 +72,7 @@ export default function BuildCrewLanding() {
         @keyframes fadeUp { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
         @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
         @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+        @keyframes modalIn { from { opacity:0; transform:translateY(20px) scale(0.97); } to { opacity:1; transform:translateY(0) scale(1); } }
         .fade-up   { animation: fadeUp 0.6s 0.00s ease both; }
         .fade-up-2 { animation: fadeUp 0.6s 0.15s ease both; }
         .fade-up-3 { animation: fadeUp 0.6s 0.30s ease both; }
@@ -68,6 +103,17 @@ export default function BuildCrewLanding() {
         .step-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(26,18,8,0.1); }
         .check-item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
         .stat-num { font-size: 52px; font-weight: 900; line-height: 1; letter-spacing: -0.02em; }
+        .form-input:focus { border-color: #E85C1A !important; }
+        .role-radio { display: none; }
+        .role-label {
+          flex: 1; padding: 14px 10px; border: 2px solid #D4C9B8; border-radius: 4px;
+          cursor: pointer; text-align: center; font-weight: 700; font-size: 13px;
+          letter-spacing: 0.06em; text-transform: uppercase; color: #6B5E50;
+          transition: all 0.15s ease;
+        }
+        .role-radio:checked + .role-label {
+          border-color: #E85C1A; background: #FFF4EE; color: #E85C1A;
+        }
       `}</style>
 
       {/* ── Ticker Banner ── */}
@@ -97,7 +143,7 @@ export default function BuildCrewLanding() {
             <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#2ECC71", animation: "pulse-dot 2s infinite" }} />
             <span style={{ fontSize: 13, fontWeight: 600, color: "#4A9960", letterSpacing: "0.04em" }}>Beta Signups Open</span>
           </div>
-          <button className="cta-btn" onClick={openTally} style={{ background: "#E85C1A", color: "white", fontSize: 14, padding: "10px 20px" }}>
+          <button className="cta-btn" onClick={openForm} style={{ background: "#E85C1A", color: "white", fontSize: 14, padding: "10px 20px" }}>
             Join Waitlist
           </button>
         </div>
@@ -149,7 +195,7 @@ export default function BuildCrewLanding() {
           </div>
 
           <div className="fade-up-5" style={{ display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
-            <button className="cta-btn" onClick={openTally} style={{ background: "#E85C1A", color: "white", fontSize: 22, padding: "18px 40px" }}>
+            <button className="cta-btn" onClick={openForm} style={{ background: "#E85C1A", color: "white", fontSize: 22, padding: "18px 40px" }}>
               Join the Waitlist →
             </button>
             <span style={{ fontSize: 13, color: "#9A8E80", fontFamily: "'Barlow', sans-serif" }}>Free during beta · No credit card</span>
@@ -219,7 +265,7 @@ export default function BuildCrewLanding() {
                   <span style={{ fontSize: 16, fontWeight: 600, color: "white", fontFamily: "'Barlow', sans-serif" }}>{item}</span>
                 </div>
               ))}
-              <button className={`cta-btn ${s.key === "trade" ? "cta-btn-green" : ""}`} onClick={openTally}
+              <button className={`cta-btn ${s.key === "trade" ? "cta-btn-green" : ""}`} onClick={openForm}
                 style={{ marginTop: 28, background: "rgba(255,255,255,0.15)", color: "white", fontSize: 16, padding: "14px 28px", border: "2px solid rgba(255,255,255,0.3)" }}>
                 {s.cta} →
               </button>
@@ -237,7 +283,7 @@ export default function BuildCrewLanding() {
         <p style={{ fontSize: 17, color: "#6B5E50", fontFamily: "'Barlow', sans-serif", lineHeight: 1.7, marginBottom: 36 }}>
           We're onboarding a small group of contractors and trades in Fresno before public launch. Early members get free access, priority matching, and a founding member badge on their profile.
         </p>
-        <button className="cta-btn" onClick={openTally} style={{ background: "#E85C1A", color: "white", fontSize: 22, padding: "20px 48px" }}>
+        <button className="cta-btn" onClick={openForm} style={{ background: "#E85C1A", color: "white", fontSize: 22, padding: "20px 48px" }}>
           Reserve Your Spot →
         </button>
         <div style={{ marginTop: 14, fontSize: 13, color: "#A89C8C", fontFamily: "'Barlow', sans-serif" }}>
@@ -260,11 +306,167 @@ export default function BuildCrewLanding() {
           <div style={{ fontSize: 13, color: "#4A3F35", fontFamily: "'Barlow', sans-serif" }}>
             Launching in Fresno, CA · Beta 2025 · hello@buildcrew.com
           </div>
-          <button className="cta-btn" onClick={openTally} style={{ background: "#E85C1A", color: "white", fontSize: 14, padding: "10px 20px" }}>
+          <button className="cta-btn" onClick={openForm} style={{ background: "#E85C1A", color: "white", fontSize: 14, padding: "10px 20px" }}>
             Join Waitlist
           </button>
         </div>
       </footer>
+
+      {/* ── Waitlist Modal ── */}
+      {formOpen && (
+        <div
+          onClick={(e) => { if (e.target === e.currentTarget) closeForm(); }}
+          style={{
+            position: "fixed", inset: 0, zIndex: 1000,
+            background: "rgba(26,18,8,0.75)", backdropFilter: "blur(4px)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            padding: "20px",
+          }}
+        >
+          <div style={{
+            background: "#F2EDE6", borderRadius: 8, width: "100%", maxWidth: 480,
+            maxHeight: "90vh", overflowY: "auto",
+            animation: "modalIn 0.25s ease both",
+            boxShadow: "0 24px 64px rgba(26,18,8,0.4)",
+          }}>
+            {/* Modal Header */}
+            <div style={{ background: "#1A1208", padding: "24px 28px", borderRadius: "8px 8px 0 0", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div>
+                <div style={{ fontSize: 22, fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.04em", color: "white" }}>
+                  🏗 Join BuildCrew Beta
+                </div>
+                <div style={{ fontSize: 13, color: "#6B5E50", marginTop: 4, fontFamily: "'Barlow', sans-serif" }}>
+                  Free access · Fresno launch · Limited spots
+                </div>
+              </div>
+              <button onClick={closeForm} style={{ background: "none", border: "none", color: "#6B5E50", fontSize: 24, cursor: "pointer", lineHeight: 1, padding: "4px 8px" }}>✕</button>
+            </div>
+
+            {formState === "success" ? (
+              <div style={{ padding: "52px 28px", textAlign: "center" }}>
+                <div style={{ fontSize: 52, marginBottom: 16 }}>✅</div>
+                <div style={{ fontSize: 28, fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.02em", marginBottom: 12 }}>You're on the list!</div>
+                <div style={{ fontSize: 15, color: "#6B5E50", fontFamily: "'Barlow', sans-serif", lineHeight: 1.6 }}>
+                  We'll reach out personally when BuildCrew launches in Fresno. Talk soon.
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} style={{ padding: "28px" }}>
+                <div style={{ display: "grid", gap: 18 }}>
+
+                  {/* Role */}
+                  <div>
+                    <label style={labelStyle}>I am a *</label>
+                    <div style={{ display: "flex", gap: 10 }}>
+                      {[
+                        { value: "contractor", label: "General Contractor" },
+                        { value: "trade", label: "Trade / Sub" },
+                      ].map(opt => (
+                        <label key={opt.value} style={{ flex: 1, display: "block" }}>
+                          <input
+                            type="radio" name="role" value={opt.value}
+                            className="role-radio"
+                            checked={formData.role === opt.value}
+                            onChange={handleChange}
+                            required
+                          />
+                          <span className="role-label" style={{
+                            display: "block", padding: "14px 10px",
+                            border: `2px solid ${formData.role === opt.value ? "#E85C1A" : "#D4C9B8"}`,
+                            borderRadius: 4, cursor: "pointer", textAlign: "center",
+                            fontWeight: 700, fontSize: 13, letterSpacing: "0.06em",
+                            textTransform: "uppercase",
+                            color: formData.role === opt.value ? "#E85C1A" : "#6B5E50",
+                            background: formData.role === opt.value ? "#FFF4EE" : "transparent",
+                            transition: "all 0.15s ease",
+                          }}>
+                            {opt.label}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Trade Type (conditional) */}
+                  {formData.role === "trade" && (
+                    <div>
+                      <label style={labelStyle}>Trade Type *</label>
+                      <select
+                        name="trade_type" value={formData.trade_type} onChange={handleChange}
+                        required={formData.role === "trade"}
+                        className="form-input"
+                        style={{ ...inputStyle, appearance: "none" }}
+                      >
+                        <option value="">Select your trade…</option>
+                        {TRADES.map(t => <option key={t} value={t}>{t}</option>)}
+                      </select>
+                    </div>
+                  )}
+
+                  {/* Name */}
+                  <div>
+                    <label style={labelStyle}>Full Name *</label>
+                    <input
+                      type="text" name="name" value={formData.name} onChange={handleChange}
+                      placeholder="John Smith" required
+                      className="form-input" style={inputStyle}
+                    />
+                  </div>
+
+                  {/* Email */}
+                  <div>
+                    <label style={labelStyle}>Email *</label>
+                    <input
+                      type="email" name="email" value={formData.email} onChange={handleChange}
+                      placeholder="you@example.com" required
+                      className="form-input" style={inputStyle}
+                    />
+                  </div>
+
+                  {/* Phone */}
+                  <div>
+                    <label style={labelStyle}>Phone <span style={{ fontWeight: 400, textTransform: "none", letterSpacing: 0 }}>(optional)</span></label>
+                    <input
+                      type="tel" name="phone" value={formData.phone} onChange={handleChange}
+                      placeholder="(559) 555-0100"
+                      className="form-input" style={inputStyle}
+                    />
+                  </div>
+
+                  {/* Company */}
+                  <div>
+                    <label style={labelStyle}>Company <span style={{ fontWeight: 400, textTransform: "none", letterSpacing: 0 }}>(optional)</span></label>
+                    <input
+                      type="text" name="company" value={formData.company} onChange={handleChange}
+                      placeholder="ABC Construction"
+                      className="form-input" style={inputStyle}
+                    />
+                  </div>
+
+                  {formState === "error" && (
+                    <div style={{ background: "#FFF0EE", border: "2px solid #E85C1A", borderRadius: 4, padding: "12px 14px", fontSize: 14, color: "#C0391A", fontFamily: "'Barlow', sans-serif" }}>
+                      Something went wrong. Make sure the local server is running (<code>npm run server</code>).
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={formState === "submitting"}
+                    className="cta-btn"
+                    style={{ background: "#E85C1A", color: "white", fontSize: 18, padding: "16px", width: "100%", opacity: formState === "submitting" ? 0.7 : 1 }}
+                  >
+                    {formState === "submitting" ? "Saving…" : "Reserve My Spot →"}
+                  </button>
+
+                  <div style={{ textAlign: "center", fontSize: 12, color: "#A89C8C", fontFamily: "'Barlow', sans-serif" }}>
+                    🔒 No spam. No credit card. We'll reach out personally.
+                  </div>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

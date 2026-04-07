@@ -25,3 +25,4 @@ dist-ssr
 
 # Local waitlist data — never commit user signups
 waitlist.json
+.vercel
